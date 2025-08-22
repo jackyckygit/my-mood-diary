@@ -11,7 +11,10 @@ RUN npm install
 COPY . .
 
 # Build the application for production
-RUN npm run build
+ARG REACT_APP_API_BASE_URL 
+# this one just for checking the arg in the build env, not in the container
+RUN echo $REACT_APP_API_BASE_URL
+RUN env REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL npm run build
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:stable-alpine

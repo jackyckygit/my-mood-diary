@@ -15,7 +15,7 @@ const app = express();
 // 1. CORS (Cross-Origin Resource Sharing)
 // This allows your frontend (running on a different port/domain) to communicate with the backend.
 app.use(cors({
-  origin: ['http://localhost:3000'], // Allow origins
+  origin: ['http://localhost:3000','http://mymooddiary.myvnc.com:3000'], // Allow origins
 }));
 
 // 2. Body Parser
