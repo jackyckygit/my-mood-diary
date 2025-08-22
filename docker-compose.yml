@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:14-alpine
+    container_name: mood_diary_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # This volume persists the database data across container restarts
+      - postgres_data:/var/lib/postgresql/data
+      # This volume mounts the init script to be run on first start
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql  
+    # ports:
+    #   - "5432:5432" # Expose for local debugging if needed, can be removed for production
+    restart: unless-stopped
+
+  # Backend Service (Node.js API)
+  api:
+    container_name: mood_diary_api
+    image: mood_diary_api:${IMAGE_TAG_API:-latest}
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      DB_USER: ${POSTGRES_USER}
+      DB_HOST: ${DB_HOST}
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+    ports:
+      - "${BACKEND_PORT}:5000"
+    restart: unless-stopped
+
+  # Frontend Service (React Client with Nginx)
+  client:
+    container_name: mood_diary_client
+    image: mood_diary_client:${IMAGE_TAG_CLIENT:-latest}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

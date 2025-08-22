@@ -1,0 +1,107 @@
+.diary-category-container {
+    padding: 1rem;
+}
+
+.diary-category-container h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.diary-category-container > p {
+    text-align: center;
+    color: #666;
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.category-nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap; /* Allows links to wrap on smaller screens */
+}
+
+.category-nav-links a {
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.category-nav-links a:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.category-nav-links a.active-link {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.diary-list-section {
+    margin-top: 2rem;
+}
+
+.diary-list-section h3 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.diary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.diary-card {
+    background-color: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s;
+}
+
+.diary-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.diary-card-header {
+    background-color: #fafafa;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid #e9e9e9;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.diary-card-header h4 {
+    margin: 0;
+    color: #444;
+}
+
+.diary-card-content {
+    padding: 1.25rem;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserves line breaks from the textarea */
+    color: #333;
+    margin: 0;
+}
+
+.loading-message, .error-message, .prompt-message {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #888;
+    padding: 2rem;
+    background-color: #fafafa;
+    border-radius: 8px;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+}

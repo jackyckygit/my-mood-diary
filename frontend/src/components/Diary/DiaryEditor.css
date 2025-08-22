@@ -1,0 +1,61 @@
+.diary-editor-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.diary-editor-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.diary-textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.diary-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: space-between; /* <-- Pushes items to opposite ends */
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.sentiment-display {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.sentiment-icon {
+  font-size: 2rem; /* Make the emoji bigger */
+  line-height: 1; /* Helps with vertical alignment */
+}
+
+.save-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-message {
+  color: #555;
+  font-style: italic;
+}
