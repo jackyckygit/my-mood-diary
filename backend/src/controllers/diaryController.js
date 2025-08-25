@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { analyzeSentiment } = require('../services/sentimentService');
+const { analyzeSentimentAndFeedback } = require('../services/sentimentService');
 
 /**
  * @desc    Create a new diary or update an existing one for a specific date.
@@ -8,42 +8,34 @@ const { analyzeSentiment } = require('../services/sentimentService');
  */
 const saveDiary = async (req, res) => {
   const { date, content } = req.body;
-  const userId = req.user.id; // Extracted from JWT by authMiddleware
+  const userId = req.user.id;
 
-  // 1. Validate input
-  if (!date || !content) {
-    return res.status(400).json({ message: 'Date and content are required.' });
+  if (!date || !content || content.trim().length === 0) {
+    return res.status(400).json({ message: 'Date and non-empty content are required.' });
   }
-  if (content.trim().length === 0) {
-    return res.status(400).json({ message: 'Diary content cannot be empty.' });
-  }
-
 
   try {
-    // 2. Get sentiment from DeepSeek AI service
-    const sentiment = await analyzeSentiment(content);
-    if (!sentiment) {
-        // This case handles if the sentiment service fails completely
-        return res.status(503).json({ message: 'Sentiment analysis service is unavailable.' });
+    // 1. Get both sentiment and feedback from the service
+    const analysis = await analyzeSentimentAndFeedback(content);
+    if (!analysis) {
+        return res.status(503).json({ message: 'Analysis service is unavailable.' });
     }
 
-    // 3. Use PostgreSQL's "UPSERT" functionality (INSERT ... ON CONFLICT)
-    // This will either INSERT a new row or UPDATE the existing row
-    // if a diary for this user on this date already exists.
+    // 2. Update the UPSERT query to include the new 'feedback' column
     const query = `
-      INSERT INTO diaries (owner_id, diary_date, content, sentiment)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO diaries (owner_id, diary_date, content, sentiment, feedback)
+      VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (owner_id, diary_date)
       DO UPDATE SET 
         content = EXCLUDED.content, 
         sentiment = EXCLUDED.sentiment, 
+        feedback = EXCLUDED.feedback,
         updated_at = CURRENT_TIMESTAMP
       RETURNING *;
     `;
-    const values = [userId, date, content, sentiment];
+    const values = [userId, date, content, analysis.emotion, analysis.feedback];
     const { rows } = await db.query(query, values);
 
-    // 4. Respond with the created/updated diary entry
     res.status(201).json(rows[0]);
 
   } catch (error) {
@@ -63,7 +55,7 @@ const getDiaryByDate = async (req, res) => {
 
   try {
     const query = `
-      SELECT id, diary_date, content, sentiment 
+      SELECT id, diary_date, content, sentiment, feedback 
       FROM diaries 
       WHERE owner_id = $1 AND diary_date = $2;
     `;
@@ -96,7 +88,7 @@ const getDiariesInRange = async (req, res) => {
 
   try {
     const query = `
-      SELECT id, diary_date, content, sentiment 
+      SELECT id, diary_date, content, sentiment, feedback 
       FROM diaries 
       WHERE owner_id = $1 AND diary_date BETWEEN $2 AND $3
       ORDER BY diary_date ASC;
@@ -130,7 +122,7 @@ const getDiariesByCategory = async (req, res) => {
 
   try {
     const query = `
-      SELECT id, diary_date, content, sentiment 
+      SELECT id, diary_date, content, sentiment, feedback 
       FROM diaries 
       WHERE owner_id = $1 AND sentiment = $2
       ORDER BY diary_date DESC;

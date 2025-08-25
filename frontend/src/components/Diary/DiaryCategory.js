@@ -15,7 +15,7 @@ const formatDate = (dateString) => {
 const DiaryCategory = () => {
     // Get the 'sentiment' from the URL, e.g., "Happy", "Sad"
     const { sentiment } = useParams();
-    
+
     const [diaries, setDiaries] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -52,7 +52,7 @@ const DiaryCategory = () => {
         <div className="diary-category-container">
             <h2>Diary Categories</h2>
             <p>View your diary entries grouped by their automatically detected mood.</p>
-            
+
             <div className="category-nav-links">
                 <NavLink to="/categories/Happy" className={({ isActive }) => isActive ? 'active-link' : ''}>😊 Happy</NavLink>
                 <NavLink to="/categories/Sad" className={({ isActive }) => isActive ? 'active-link' : ''}>😢 Sad</NavLink>
@@ -63,7 +63,7 @@ const DiaryCategory = () => {
             <div className="diary-list-section">
                 {isLoading && <p className="loading-message">Loading entries...</p>}
                 {error && <p className="error-message">{error}</p>}
-                
+
                 {!sentiment && !isLoading && (
                     <p className="prompt-message">Please select a category above to view your entries.</p>
                 )}
@@ -79,6 +79,9 @@ const DiaryCategory = () => {
                                             <h4>{formatDate(diary.diary_date)}</h4>
                                         </div>
                                         <p className="diary-card-content">{diary.content}</p>
+                                        {(diary.feedback &&
+                                            <p className="diary-card-feedback"><span><b>Feedback: </b></span>{diary.feedback}</p>
+                                        )}
                                     </div>
                                 ))}
                             </div>

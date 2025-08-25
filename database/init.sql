@@ -18,6 +18,7 @@ CREATE TABLE diaries (
     diary_date DATE NOT NULL,
     content TEXT NOT NULL,
     sentiment VARCHAR(50) NOT NULL,
+    feedback TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_owner

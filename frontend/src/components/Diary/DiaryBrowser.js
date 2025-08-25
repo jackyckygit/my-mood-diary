@@ -189,7 +189,7 @@ const DiaryBrowser = () => {
           <div className="view-all-container">
             {/* --- MONTH BUTTON (conditionally rendered) --- */}
             {monthlyDiaries.length > 0 && (
-              <button 
+              <button
                 className="btn btn-secondary"
                 onClick={() => setIsModalOpen(true)}
               >
@@ -197,7 +197,7 @@ const DiaryBrowser = () => {
               </button>
             )}
             {/* --- YEAR BUTTON --- */}
-            <button 
+            <button
               className="btn btn-secondary"
               onClick={handleOpenYearModal}
               disabled={isYearLoading}
@@ -225,11 +225,20 @@ const DiaryBrowser = () => {
                 placeholder="Write your diary entry for this day..."
                 disabled={isSaving}
               />
+              <div className="editor-panel">
+                {selectedDiary.feedback && (
+                  <>
+                    <span><b>Feedback: </b></span>
+                    {selectedDiary.feedback}
+                  </>
+                )}
+
+              </div>
               <div className="editor-panel-actions">
                 <div className="sentiment-display-browser">
                   {selectedDiary.sentiment && (
                     <>
-                      <span>Mood:</span>
+                      <span><b>Mood:</b></span>
                       <span className="sentiment-icon" title={`Analyzed Mood: ${selectedDiary.sentiment}`}>
                         {getSentimentIcon(selectedDiary.sentiment)}
                       </span>
@@ -279,6 +288,9 @@ const DiaryBrowser = () => {
                       </span>
                     </h4>
                     <p>{diary.content}</p>
+                    {(diary.feedback &&
+                      <p><span><b>Feedback: </b></span>{diary.feedback}</p>
+                    )}
                   </div>
                 ))
               ) : (
@@ -295,8 +307,8 @@ const DiaryBrowser = () => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>All Entries for {currentYear}</h3>
-              <button 
-                className="modal-close-button" 
+              <button
+                className="modal-close-button"
                 onClick={() => setIsYearModalOpen(false)}
               >
                 &times;
@@ -315,6 +327,9 @@ const DiaryBrowser = () => {
                       </span>
                     </h4>
                     <p>{diary.content}</p>
+                    {(diary.feedback &&
+                      <p><span><b>Feedback: </b></span>{diary.feedback}</p>
+                    )}
                   </div>
                 ))
               ) : (

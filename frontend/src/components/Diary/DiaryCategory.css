@@ -92,6 +92,14 @@
     margin: 0;
 }
 
+.diary-card-feedback {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    line-height: 1.2;
+    white-space: pre-wrap; /* Preserves line breaks from the textarea */
+    color: #333333;
+    margin: 0;
+}
+
 .loading-message, .error-message, .prompt-message {
     text-align: center;
     font-size: 1.1rem;

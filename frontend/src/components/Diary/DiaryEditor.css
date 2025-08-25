@@ -4,8 +4,8 @@
 }
 
 .diary-editor-container h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .diary-textarea {
@@ -29,7 +29,8 @@
 
 .editor-actions {
   display: flex;
-  justify-content: space-between; /* <-- Pushes items to opposite ends */
+  justify-content: space-between;
+  /* <-- Pushes items to opposite ends */
   align-items: center;
   margin-top: 1.5rem;
   gap: 1rem;
@@ -44,9 +45,16 @@
   font-weight: 500;
 }
 
+.feedback-display {
+  margin-bottom: 0.5em;
+  color: #555
+}
+
 .sentiment-icon {
-  font-size: 2rem; /* Make the emoji bigger */
-  line-height: 1; /* Helps with vertical alignment */
+  font-size: 2rem;
+  /* Make the emoji bigger */
+  line-height: 1;
+  /* Helps with vertical alignment */
 }
 
 .save-section {

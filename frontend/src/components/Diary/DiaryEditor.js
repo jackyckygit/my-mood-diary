@@ -11,7 +11,8 @@ const DiaryEditor = () => {
   const [content, setContent] = useState('');
   const [status, setStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [savedSentiment, setSavedSentiment] = useState(null); 
+  const [savedSentiment, setSavedSentiment] = useState(null);
+  const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
     const fetchDiary = async () => {
@@ -19,7 +20,8 @@ const DiaryEditor = () => {
         const response = await apiClient.get(`/diaries/${today}`);
         if (response.data) {
           setContent(response.data.content);
-          setSavedSentiment(response.data.sentiment); 
+          setSavedSentiment(response.data.sentiment);
+          setFeedback(response.data.feedback || '');
         }
       } catch (error) {
         if (error.response && error.response.status !== 404) {
@@ -33,9 +35,9 @@ const DiaryEditor = () => {
 
   const handleSave = async () => {
     if (!content.trim()) {
-        setStatus('Diary content cannot be empty.');
-        setTimeout(() => setStatus(''), 3000);
-        return;
+      setStatus('Diary content cannot be empty.');
+      setTimeout(() => setStatus(''), 3000);
+      return;
     }
 
     setIsLoading(true);
@@ -43,14 +45,15 @@ const DiaryEditor = () => {
     try {
       // The API response includes the newly analyzed sentiment
       const response = await apiClient.post('/diaries', { date: today, content });
-      setSavedSentiment(response.data.sentiment); 
+      setSavedSentiment(response.data.sentiment);
+      setFeedback(response.data.feedback || '');
       setStatus('Saved successfully!');
       setTimeout(() => setStatus(''), 2000);
     } catch (error) {
       setStatus('Failed to save.');
       console.error("Error saving diary:", error);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -67,22 +70,40 @@ const DiaryEditor = () => {
         disabled={isLoading}
       />
       <Tooltip id="editor-tooltip" />
-      
+
       <div className="editor-actions">
-        <div className="sentiment-display">
+        <div>
           {savedSentiment && (
             <>
-              <span>Today's Mood:</span>
-              <span 
-                className="sentiment-icon" 
-                title={`Analyzed Mood: ${savedSentiment}`}
-              >
-                {getSentimentIcon(savedSentiment)}
-              </span>
+              <div className="feedback-display">
+                {feedback && (
+                  <div className="sentiment-feedback">
+                    <span><b>Feedback: </b></span>
+                    {feedback}
+                  </div>
+                )}
+              </div>
+              <div className="sentiment-display">
+                <span><b>Today's Mood:</b></span>
+                <span
+                  className="sentiment-icon"
+                  title={`Analyzed Mood: ${savedSentiment}`}
+                >
+                  <b>{getSentimentIcon(savedSentiment)}</b>
+                </span>
+              </div>
             </>
           )}
+          {!savedSentiment && (
+            <div className="no-sentiment">
+              <span><b>Today's Mood:</b></span>
+              <span className="sentiment-icon">
+                <b>?</b>
+              </span>
+            </div>
+          )}
         </div>
-        
+
         <div className="save-section">
           {status && <span className="status-message">{status}</span>}
           <button onClick={handleSave} className="btn btn-primary" disabled={isLoading}>
